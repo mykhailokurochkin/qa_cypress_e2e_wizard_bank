@@ -22,19 +22,25 @@ describe('Bank manager', () => {
     cy.contains('button', 'Add Customer').click();
     cy.get('input[ng-model="fName"]').type(newUser.firstName);
     cy.get('input[ng-model="lName"]').type(newUser.lastName);
-    cy.get('input[ng-model="postCd"]').type(newUser.postCode + '{enter}');
-    cy.on('window:alert', (alertText) => {
-      expect(alertText).to.include('successfully');
+
+    cy.window().then(() => {
+      cy.on('window:alert', (alertText) => {
+        expect(alertText).to.include('successfully');
+      });
     });
+    cy.get('input[ng-model="postCd"]').type(newUser.postCode + '{enter}');
 
     cy.contains('button', 'Open Account').click();
     cy.get('select#userSelect')
       .select(newUser.firstName + ' ' + newUser.lastName);
     cy.get('select#currency').select(newUser.currency);
-    cy.contains('button', 'Process').click();
-    cy.on('window:alert', (alertText) => {
-      expect(alertText).to.include('successfully');
+
+    cy.window().then(() => {
+      cy.on('window:alert', (alertText) => {
+        expect(alertText).to.include('successfully');
+      });
     });
+    cy.contains('button', 'Process').click();
 
     cy.contains('button', 'Customers').click();
     cy.contains('td', newUser.postCode).should('exist');

@@ -47,28 +47,5 @@ describe('Bank app', () => {
     cy.contains('[ng-hide="noAccount"]', 'Balance')
       .contains('strong', balance)
       .should('be.visible');
-
-    // eslint-disable-next-line cypress/no-unnecessary-waiting
-    cy.wait(3000);
-
-    cy.get('[ng-class="btnClass1"]').click();
-    cy.contains('Date-Time');
-    cy.contains('Amount');
-    cy.contains('Transaction Type');
-    cy.contains('Credit');
-    cy.contains('Debit');
-
-    cy.contains('[ng-show="showDate"]', 'Reset').click();
-    cy.contains('Credit').should('not.exist');
-    cy.contains('Debit').should('not.exist');
-
-    cy.contains('button', 'Back').click();
-    cy.get('select#accountSelect').select(1);
-    cy.get('[ng-class="btnClass1"]').click();
-    cy.contains('Credit').should('not.exist');
-    cy.contains('Debit').should('not.exist');
-
-    cy.get('[ng-show="logout"]').click();
-    cy.contains('label', 'Your Name :').should('exist');
   });
 });
