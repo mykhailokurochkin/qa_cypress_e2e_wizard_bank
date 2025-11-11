@@ -1,9 +1,11 @@
 /// <reference types='cypress' />
 
-describe('Bank app', () => {
-  const deposit = 1000;
-  const withdrawl = 500;
+import { faker } from '@faker-js/faker';
 
+describe('Bank app', () => {
+  const deposit = faker.number.int({ min: 500, max: 1500 });
+  const withdrawl = faker.number.int({ min: 100, max: deposit });
+  const balance = deposit - withdrawl;
   const accountNumber = '1001';
 
   before(() => {
@@ -20,6 +22,18 @@ describe('Bank app', () => {
       .should('be.visible');
     cy.contains('.ng-binding', 'Dollar')
       .should('be.visible');
+    cy.contains('[ng-hide="noAccount"]', 'Balance')
+      .contains('strong', '0');
+
+    cy.get('[ng-class="btnClass1"]').click();
+    cy.contains('Date-Time');
+    cy.contains('Amount');
+    cy.contains('Transaction Type');
+
+    cy.contains('[ng-show="showDate"]', 'Reset').click();
+    cy.contains('Credit').should('not.exist');
+    cy.contains('Debit').should('not.exist');
+    cy.contains('button', 'Back').click();
 
     cy.contains('[ng-hide="noAccount"]', 'Balance')
       .find('strong')
@@ -31,6 +45,8 @@ describe('Bank app', () => {
 
         cy.get('[ng-show="message"]')
           .should('contain', 'Deposit Successful');
+        cy.contains('[ng-hide="noAccount"]', 'Balance')
+          .contains('strong', deposit);
 
         cy.get('[ng-click="withdrawl()"]').click();
         cy.contains('[type="submit"]', 'Withdraw')
@@ -40,6 +56,8 @@ describe('Bank app', () => {
 
         cy.get('[ng-show="message"]')
           .should('contain', 'Transaction successful');
+        cy.contains('[ng-hide="noAccount"]', 'Balance')
+          .contains('strong', balance);
 
         // eslint-disable-next-line cypress/no-unnecessary-waiting
         cy.wait(3000);
